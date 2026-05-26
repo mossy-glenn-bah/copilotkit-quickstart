@@ -10,6 +10,163 @@ This repository includes fixes and modifications to enable seamless integration 
 
 ---
 
+## What is CopilotKit?
+
+[CopilotKit](https://copilotkit.ai) is the **frontend stack for AI agents** - a powerful open-source framework that connects any AI agent framework or model to your React application. It enables developers to build sophisticated AI-powered features including chat interfaces, generative UI, canvas experiences, and human-in-the-loop workflows.
+
+### Core Capabilities
+
+**CopilotKit provides:**
+- 🤖 **AI Chat Interfaces** - Drop-in chat components with conversation history and context awareness
+- 🔌 **Universal Agent Integration** - Connect OpenAI, Anthropic, Google, or any OpenAI-compatible API
+- 🎨 **Generative UI** - AI that can render React components dynamically based on context
+- 🔧 **Function Calling** - Enable AI to trigger actions in your application
+- 📝 **Context Management** - Automatically provide relevant application state to the AI
+- 🎯 **Human-in-the-Loop** - Request user approval for sensitive operations
+- 🌐 **Self-Hosted & Cloud** - Deploy anywhere with full control over your data
+
+### Use Cases
+
+- **Customer Support Assistants** - Context-aware chatbots that understand your app's state
+- **Content Generation Tools** - AI-powered writing, editing, and creation workflows
+- **Data Analysis Interfaces** - Natural language queries over your application data
+- **Workflow Automation** - AI agents that can navigate and perform tasks in your UI
+- **Code Assistants** - IDE-like experiences with AI code completion and suggestions
+- **Local-First AI** - Privacy-focused deployments with local LLMs (LM Studio, Ollama)
+
+---
+
+## Architecture Overview
+
+### System Architecture
+
+This project demonstrates CopilotKit's integration with local LLM providers, eliminating cloud dependencies:
+
+```mermaid
+graph TB
+    subgraph "Frontend (React/Next.js)"
+        A[User Interface]
+        B[CopilotChat Component]
+        C[CopilotKit Provider]
+    end
+    
+    subgraph "Backend (Next.js API Route)"
+        D[/api/copilotkit]
+        E[CopilotRuntime]
+        F[OpenAIAdapter]
+    end
+    
+    subgraph "Local LLM Provider"
+        G[LM Studio<br/>Port 1234]
+        H[Ollama<br/>Port 11434]
+    end
+    
+    A -->|User Message| B
+    B -->|Context + Message| C
+    C -->|HTTP POST| D
+    D --> E
+    E --> F
+    F -.->|OpenAI-Compatible API| G
+    F -.->|OpenAI-Compatible API| H
+    G -->|Response Stream| F
+    H -->|Response Stream| F
+    F --> E
+    E --> D
+    D -->|AI Response| C
+    C -->|Display| B
+    B -->|Update| A
+    
+    style G fill:#e1f5e1
+    style H fill:#e1f5e1
+    style F fill:#fff4e1
+    style E fill:#fff4e1
+```
+
+### Data Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant CopilotChat
+    participant Runtime as CopilotRuntime
+    participant Adapter as OpenAIAdapter
+    participant LLM as Local LLM<br/>(LM Studio/Ollama)
+    
+    User->>CopilotChat: Type message
+    CopilotChat->>Runtime: Send message + context
+    Runtime->>Adapter: Format request
+    Adapter->>LLM: POST /v1/chat/completions
+    LLM-->>Adapter: Stream response
+    Adapter-->>Runtime: Parse response
+    Runtime-->>CopilotChat: Update UI
+    CopilotChat-->>User: Display AI response
+    
+    Note over LLM: Fully local<br/>No cloud APIs<br/>No data leaves your machine
+```
+
+### Component Integration
+
+```mermaid
+graph LR
+    subgraph "Your App"
+        A[page.tsx]
+        B[layout.tsx]
+    end
+    
+    subgraph "CopilotKit Components"
+        C[CopilotKit Provider]
+        D[CopilotChat UI]
+    end
+    
+    subgraph "API Layer"
+        E[route.ts]
+        F[CopilotRuntime]
+    end
+    
+    subgraph "LLM Adapter"
+        G[OpenAIAdapter]
+        H[Config: baseURL, model]
+    end
+    
+    A --> D
+    B --> C
+    C -.->|runtimeUrl| E
+    D -.->|messages| C
+    E --> F
+    F --> G
+    G --> H
+    
+    style C fill:#4a90e2
+    style D fill:#4a90e2
+    style G fill:#f39c12
+    style H fill:#f39c12
+```
+
+### Why Local LLMs with CopilotKit?
+
+This implementation showcases CopilotKit's flexibility by using **local LLM providers** instead of cloud APIs:
+
+**Benefits:**
+- 🔒 **Privacy & Security** - All data processing happens on your machine
+- 🚀 **No API Costs** - Eliminate per-token pricing from cloud providers
+- 🌐 **Offline Capable** - Works without internet connectivity
+- 🏢 **Corporate Compliance** - Bypass network restrictions (e.g., Zscaler proxies)
+- 🎮 **Full Control** - Choose any model, customize parameters, modify behavior
+- ⚡ **Low Latency** - Local inference can be faster than cloud round-trips
+
+**CopilotKit's OpenAI-compatible adapter** makes it trivial to swap between:
+- Cloud providers (OpenAI, Anthropic, Google)
+- Local runners (LM Studio, Ollama)
+- Custom inference servers
+- Enterprise deployments
+
+**Learn More:**
+- [CopilotKit Documentation](https://docs.copilotkit.ai)
+- [API Reference](https://docs.copilotkit.ai/reference)
+- [CopilotKit GitHub](https://github.com/CopilotKit/CopilotKit)
+
+---
+
 ## Features
 
 - ✅ CopilotKit chat interface with local LLM support
