@@ -44,21 +44,21 @@ This project demonstrates CopilotKit's integration with local LLM providers, eli
 
 ```mermaid
 graph TB
-    subgraph "Frontend (React/Next.js)"
+    subgraph Frontend["Frontend (React/Next.js)"]
         A[User Interface]
         B[CopilotChat Component]
         C[CopilotKit Provider]
     end
     
-    subgraph "Backend (Next.js API Route)"
-        D[/api/copilotkit]
+    subgraph Backend["Backend (Next.js API Route)"]
+        D["API Route: /api/copilotkit"]
         E[CopilotRuntime]
         F[OpenAIAdapter]
     end
     
-    subgraph "Local LLM Provider"
-        G[LM Studio<br/>Port 1234]
-        H[Ollama<br/>Port 11434]
+    subgraph LLM["Local LLM Provider"]
+        G["LM Studio (Port 1234)"]
+        H["Ollama (Port 11434)"]
     end
     
     A -->|User Message| B
@@ -90,7 +90,7 @@ sequenceDiagram
     participant CopilotChat
     participant Runtime as CopilotRuntime
     participant Adapter as OpenAIAdapter
-    participant LLM as Local LLM<br/>(LM Studio/Ollama)
+    participant LLM as Local LLM
     
     User->>CopilotChat: Type message
     CopilotChat->>Runtime: Send message + context
@@ -101,31 +101,31 @@ sequenceDiagram
     Runtime-->>CopilotChat: Update UI
     CopilotChat-->>User: Display AI response
     
-    Note over LLM: Fully local<br/>No cloud APIs<br/>No data leaves your machine
+    Note over LLM: Fully local - No cloud APIs<br/>No data leaves your machine
 ```
 
 ### Component Integration
 
 ```mermaid
 graph LR
-    subgraph "Your App"
+    subgraph App["Your App"]
         A[page.tsx]
         B[layout.tsx]
     end
     
-    subgraph "CopilotKit Components"
+    subgraph CopilotKit["CopilotKit Components"]
         C[CopilotKit Provider]
         D[CopilotChat UI]
     end
     
-    subgraph "API Layer"
+    subgraph API["API Layer"]
         E[route.ts]
         F[CopilotRuntime]
     end
     
-    subgraph "LLM Adapter"
+    subgraph Adapter["LLM Adapter"]
         G[OpenAIAdapter]
-        H[Config: baseURL, model]
+        H["Config: baseURL, model"]
     end
     
     A --> D
