@@ -1,6 +1,7 @@
 "use client";
 
 import { CopilotChat } from "@copilotkit/react-ui";
+import ChatSuggestions from "@/components/ChatSuggestions";
 
 export default function Page() {
   return (
@@ -14,6 +15,7 @@ export default function Page() {
           <p>✅ No cloud dependencies</p>
         </div>
       </div>
+      <ChatSuggestions />
       <CopilotChat
         labels={{
           title: "Local AI Assistant",
