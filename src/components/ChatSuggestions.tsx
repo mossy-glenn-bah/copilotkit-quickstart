@@ -3,18 +3,22 @@
 /**
  * Chat Suggestions Component
  * 
- * Note: The useCopilotChatSuggestions hook requires CopilotKit v2 agent mode.
- * Since this app uses v1 components with direct OpenAI adapter (no agents),
- * suggestions are not currently supported.
+ * CONCLUSION: CopilotKit v2 suggestions (useConfigureSuggestions) are NOT compatible
+ * with local LLM setups like LM Studio, even with LangChain integration.
  * 
- * To enable suggestions, you would need to:
- * 1. Upgrade to CopilotKit v2 components (CopilotSidebar instead of CopilotChat)
- * 2. Configure BuiltInAgent in the API route
- * 3. Use useConfigureSuggestions from @copilotkit/react-core/v2
+ * The issue is architectural:
+ * - v2 suggestions require BuiltInAgent
+ * - BuiltInAgent expects specific OpenAI API response formats
+ * - Local LLMs (LM Studio, Ollama) use simplified OpenAI-compatible responses
+ * - Missing fields like 'specificationVersion' cause runtime errors
  * 
- * For now, this component is disabled to prevent abort errors.
+ * For local LLM setups, the best approach is:
+ * - Use CopilotKit v2 UI components (CopilotSidebar) ✅
+ * - Use direct OpenAIAdapter (no agents) ✅
+ * - Skip v2 suggestions feature ✅
+ * - Chat functionality works perfectly ✅
  */
 export default function ChatSuggestions() {
-  // Disabled - requires v2 agent mode
+  // Disabled - requires agent mode which is incompatible with LM Studio
   return null;
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { CopilotKit } from "@copilotkit/react-core";
-import "@copilotkit/react-ui/styles.css";
+import { CopilotKitProvider } from "@copilotkit/react-core/v2";
+import "@copilotkit/react-core/v2/styles.css";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,12 +21,12 @@ export const metadata: Metadata = {
 
 function CopilotProvider({ children }: { children: React.ReactNode }) {
   return (
-    <CopilotKit 
+    <CopilotKitProvider 
       runtimeUrl="/api/copilotkit"
       showDevConsole={false}
     >
       {children}
-    </CopilotKit>
+    </CopilotKitProvider>
   );
 }
 
